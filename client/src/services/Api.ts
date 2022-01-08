@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:8080";
+const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8080";
 
 export const getTodoList = async (id : string) => {
     try {

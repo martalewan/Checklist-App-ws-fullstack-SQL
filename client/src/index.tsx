@@ -12,7 +12,7 @@ declare global {
 }
 
 window.services = {
-  wsHandler: new WebsocketHandler("ws://localhost:8080/ws/todo-list")
+  wsHandler: new WebsocketHandler(process.env.REACT_APP_WS_URL || "ws://localhost:8080/ws/todo-list")
 }
 
 ReactDOM.render(
