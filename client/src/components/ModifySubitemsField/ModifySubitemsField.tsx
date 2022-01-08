@@ -7,21 +7,12 @@ interface ModifySubitemsFieldProps {
   updateChecklistRowValue:  (selectedTodo: TodoItemType, e: any, type: string) => void;
 }
 
-const isNumberKey = (e: any) => {
-  var charCode = (e.which) ? e.which : e.keyCode
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    return false;
-  } 
-  return true;
-}
-
-
 const ModifySubitemsField: React.FC<ModifySubitemsFieldProps> = ({ todo, updateChecklistRowText, updateChecklistRowValue }) => {
   return (
     <>
       <form className="modify-form">
         <label className="modify-form__label--name">Name:</label>
-          <input value={todo.text} id="text" type="number" className="subtodo-item-input" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowText(todo.id, e)}/> 
+          <input value={todo.text} id="text" type="text" className="subtodo-item-input" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowText(todo.id, e)}/> 
         <label className="modify-form__label">Price:</label>
           <input value={todo.price} id="price" type="text" className="subtodo-item-input"onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowValue(todo, e, 'price')}/> 
         <label className="modify-form__label">Time:</label>
