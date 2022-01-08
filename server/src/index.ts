@@ -9,7 +9,7 @@ const app = express();
 expressWs(app);
 dotenv.config();
 
-const port = 8080;
+const port = 80;
 app.use(cors());
 app.use(express.json());
 
