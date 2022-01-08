@@ -1,0 +1,18 @@
+.navigation {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3.2rem;
+  padding: 0 2%;
+  background-color: var(--white);
+}
+
+.logo {
+  color: var(--dark-grey);
+  font-weight: 600;
+  font-size: 15px;
+}

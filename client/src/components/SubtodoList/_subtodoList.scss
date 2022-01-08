@@ -1,0 +1,44 @@
+.subtodo-wrapper {
+  background: var(--light-grey);
+  box-shadow: var(--inner-shadow); 
+  height: 75vh;
+  border-radius: 4px;
+  overflow-y: scroll;
+}
+
+.subtodo-wrapper__icons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.subtodo-items-list {
+  margin: 1rem;
+}
+
+.Modal {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10rem;
+  background-color: var(--white);
+  height: 20rem;
+  width: 25rem;
+  display: flex;
+  padding: 1rem;
+  color: var(--dark-grey);
+  box-shadow: var(--box-shadow);
+  border-radius: 3px;
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(235, 244, 245, 0.762);
+}
+
+.header-text {
+  font-size: 10px;
+  color: var(--blue);
+}

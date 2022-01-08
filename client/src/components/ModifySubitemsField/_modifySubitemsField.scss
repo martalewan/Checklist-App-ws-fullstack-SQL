@@ -1,0 +1,47 @@
+.modify-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.subtodo-item-input {
+  height: 1.8rem;
+}
+
+.subtodo-notes {
+  padding-top: .3rem;
+}
+
+.subtodo-notes,
+.subtodo-item-input {
+  margin-top: 1.6 rem;
+  padding-left: .3rem ;
+  background: rgb(250, 250, 250);
+  box-shadow: var(--inner-shadow);
+  outline: none;
+  border: none;
+  border-radius: 4px;
+}
+
+.subtodo-notes::placeholder,
+.subtodo-item-input::placeholder {
+  color: var(--medium-grey);
+}
+
+.edit-subtodo__btn {
+  margin-top: 1.1rem;
+}
+
+.modify-form__label {
+  margin-top: 1rem;
+}
+.modify-form__label--name {
+  margin-top: .4rem;
+
+}
+.modify-form__label--name,
+.modify-form__label {
+  margin-bottom: .3rem;
+  font-size: 13px;
+  color: var(--dark-grey);
+}
