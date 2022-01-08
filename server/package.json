@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Reminder App server",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "start": "npx tsc && node dist/index.js"
   },
