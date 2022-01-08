@@ -8,7 +8,6 @@ import handleNewClient from './ws'
 const app = express();
 expressWs(app);
 dotenv.config();
-console.log(process.env);
 
 const port = process.env.PORT || 8080;
 app.use(cors());
