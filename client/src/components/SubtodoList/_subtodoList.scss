@@ -4,15 +4,15 @@
   height: 75vh;
   border-radius: 4px;
   overflow-y: scroll;
-}
 
-.subtodo-wrapper__icons {
-  display: flex;
-  justify-content: flex-end;
-}
+  &__icons {
+    display: flex;
+    justify-content: flex-end;
+  }
 
-.subtodo-items-list {
-  margin: 1rem;
+  &__subtodo-items {
+    margin: 1rem;
+  }
 }
 
 .Modal {
@@ -36,9 +36,4 @@
   right: 0;
   bottom: 0;
   background-color: rgba(235, 244, 245, 0.762);
-}
-
-.header-text {
-  font-size: 10px;
-  color: var(--blue);
 }

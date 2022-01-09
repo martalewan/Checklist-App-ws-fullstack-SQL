@@ -3,26 +3,28 @@ import { TodoItemType } from '../../models/models';
 import iconModify from '../../img/icon-modify.svg';
 import iconExit from '../../img/icon-exit.svg';
 
-interface TodoListItemProps {
+interface SubtodoListItemProps {
   todo: TodoItemType;
   deleteChecklistSubtaskRow: (id: string, e: any) => void;
   updateChecklistRowComplete: (selectedTodo: TodoItemType) => void;
-  updateChecklistRowText: (id : string, e: React.ChangeEvent<HTMLInputElement>) => void;
+  updateChecklistRowText: (id: string, e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveRow: (id: string, e: any) => void;
   onModify: (e: any) => void;
 }
 
-const SubtodoListItem: React.FC<TodoListItemProps> = ({ todo, updateChecklistRowComplete, updateChecklistRowText, onModify, deleteChecklistSubtaskRow }) => {
+const SubtodoListItem: React.FC<SubtodoListItemProps> = ({ todo, updateChecklistRowComplete, updateChecklistRowText, onModify, deleteChecklistSubtaskRow }) => {
   return (
-    <li className={todo.complete? "todo-row completed" : "todo-row"} >
+    <li className={todo.complete ? "todo-row completed" : "todo-row"} >
       <div className="todo-item__label">
         <input
           type="checkbox"
           onChange={() => updateChecklistRowComplete(todo)}
           checked={todo.complete}
           className="todo-checkbox"
-          />
-          <input value={todo.text} type="text" className="todo-item-input" placeholder="New todo" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowText(todo.id, e)}/>
+        />
+        <input value={todo.text} type="text" className="todo-item-input" placeholder="New todo" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowText(todo.id, e)} />
+        <span className="header-text">{todo.price}$</span>
+        <span className="header-text">{todo.time}h</span>
       </div>
       <div className="todo-row__icons">
         <button className="icon-wrapper" onClick={onModify}>
@@ -33,7 +35,7 @@ const SubtodoListItem: React.FC<TodoListItemProps> = ({ todo, updateChecklistRow
         </button>
       </div>
     </li>
-  )
-}
+  );
+};
 
 export default SubtodoListItem;

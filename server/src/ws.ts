@@ -17,8 +17,8 @@ interface SessionTodoListType {
     todoList: TodoListType;
 }
 
-const wsSessions : { [id: number]: Session } = {};
-const todoListSessions : { [id: string]: SessionTodoListType } = {};
+const wsSessions: { [id: number]: Session } = {};
+const todoListSessions: { [id: string]: SessionTodoListType } = {};
 
 interface Msg {
     command: string;
@@ -42,13 +42,15 @@ interface AddRowMsg extends Msg {
     data: TodoItemType;
 }
 interface UserJoinLeftMessage extends Msg {
-    data: {id: number}
-  }
-  interface DeleteListMsg extends Msg {
-    listId: string;
+    data: { id: number };
 }
 
-const handleNewClient = (ws: any, req : object) => {
+interface ChangeOrderMsg extends Msg {
+    swapA: number;
+    swapB: number;
+}
+
+const handleNewClient = (ws: any, req: object) => {
     const newPlayerId = playerIdCounter++;
     wsSessions[newPlayerId] = {
         ws: ws,
@@ -56,7 +58,7 @@ const handleNewClient = (ws: any, req : object) => {
     };
     console.log(`New user joined with id ${newPlayerId}`);
 
-    ws.on('message', (msg : string) => {
+    ws.on('message', (msg: string) => {
         handleMessage(newPlayerId, JSON.parse(msg));
     });
     ws.on('close', () => {
@@ -67,7 +69,7 @@ const handleNewClient = (ws: any, req : object) => {
     });
 }
 
-const initSession = (id: string) : Promise<TodoListType> => {
+const initSession = (id: string): Promise<TodoListType> => {
     return new Promise((resolve, reject) => {
         getTodoListById(id).then(res => {
             resolve(res);
@@ -78,21 +80,30 @@ const initSession = (id: string) : Promise<TodoListType> => {
     });
 }
 
-const broadCastMessage = (todoListId: string, msg : Msg ) => {
-    const msgSerializedString : string = JSON.stringify(msg);
+const broadCastMessageExcludePlayerId = (todoListId: string, excludePlayerId: number, msg: Msg) => {
+    const msgSerializedString: string = JSON.stringify(msg);
+    const allUsers = todoListSessions[todoListId].users;
+    const filteredUsers = allUsers.filter(user => user.id !== excludePlayerId);
+    filteredUsers.forEach((user: { id: number; }) => {
+        wsSessions[user.id].ws.send(msgSerializedString);
+    });
+}
+
+const broadCastMessage = (todoListId: string, msg: Msg) => {
+    const msgSerializedString: string = JSON.stringify(msg);
     todoListSessions[todoListId].users
         .forEach((user: { id: number; }) => {
             wsSessions[user.id].ws.send(msgSerializedString);
-    });
+        });
 }
 
 const isInSession = (playerId: number) => {
     return playerId in wsSessions && wsSessions[playerId].joinedTodoListId != null;
 }
 
-const addUserToTodoListSession = (todoListId: string, playerId: number ) => {
+const addUserToTodoListSession = (todoListId: string, playerId: number) => {
     wsSessions[playerId].joinedTodoListId = todoListId;
-    todoListSessions[todoListId].users.push({id: playerId});
+    todoListSessions[todoListId].users.push({ id: playerId });
 }
 
 const userLeave = (playerId: number) => {
@@ -101,7 +112,7 @@ const userLeave = (playerId: number) => {
         const todoListId = wsSessions[playerId].joinedTodoListId;
         if (todoListId != null && todoListId in todoListSessions) {
             todoListSessions[todoListId].users = todoListSessions[todoListId].users.filter((user: any) => user.id !== playerId);
-            broadCastMessage(todoListId, {command: "user_left", data: {id: playerId}} as UserJoinLeftMessage);
+            broadCastMessage(todoListId, { command: "user_left", data: { id: playerId } } as UserJoinLeftMessage);
             if (todoListSessions[todoListId].users.length === 0) {
                 closeTodoList(todoListId);
             }
@@ -120,14 +131,14 @@ const closeTodoList = (id: string) => {
     updateTodoList(id, todoListSession.todoList);
 }
 
-const onFatalError = (ws : WebSocket, playerId: number, reason : string) => {
+const onFatalError = (ws: WebSocket, playerId: number, reason: string) => {
     console.log(`Fatal error for playerId ${playerId} reason ${reason}`)
     userLeave(playerId);
     ws.close();
 }
 
 // handle message
-const handleMessage = (playerId : number, msg : Msg) => {
+const handleMessage = (playerId: number, msg: Msg) => {
     const ws = wsSessions[playerId].ws;
 
     if (msg.command === undefined) {
@@ -137,7 +148,7 @@ const handleMessage = (playerId : number, msg : Msg) => {
     }
 
     if (msg.command === "join") {
-        const joinMsg : JoinMsg = msg as JoinMsg;
+        const joinMsg: JoinMsg = msg as JoinMsg;
         if (isInSession(playerId)) {
             return onFatalError(ws, playerId, "You can only join once");
         }
@@ -149,19 +160,18 @@ const handleMessage = (playerId : number, msg : Msg) => {
                     todoList: todoList
                 };
                 addUserToTodoListSession(id, playerId);
-                return ws.send(JSON.stringify({command: "init", data: todoListSessions[id]} as InitMsg));
+                return ws.send(JSON.stringify({ command: "init", data: todoListSessions[id] } as InitMsg));
             }).catch(err => {
                 console.error(err);
             });
         } else {
             addUserToTodoListSession(id, playerId);
-            ws.send(JSON.stringify({command: "init", data: todoListSessions[id]}));
-            return broadCastMessage(id, {command: "user_joined", data: {id: playerId}} as UserJoinLeftMessage);
+            ws.send(JSON.stringify({ command: "init", data: todoListSessions[id] }));
+            return broadCastMessage(id, { command: "user_joined", data: { id: playerId } } as UserJoinLeftMessage);
         }
     }
 
     const todoListId = wsSessions[playerId].joinedTodoListId;
-    ws.send(JSON.stringify({command: "init", data: todoListSessions[todoListId]}));
 
     switch (msg.command) {
         case "row_update": {
@@ -172,7 +182,7 @@ const handleMessage = (playerId : number, msg : Msg) => {
         }
         case "row_delete": {
             const rowId = (msg as DeleteRowMsg).rowId;
-            todoListSessions[todoListId].todoList.todoListRows =  todoListSessions[todoListId].todoList.todoListRows.filter((row: TodoItemType) => row.id !== rowId);
+            todoListSessions[todoListId].todoList.todoListRows = todoListSessions[todoListId].todoList.todoListRows.filter((row: TodoItemType) => row.id !== rowId);
             return broadCastMessage(todoListId, msg);
         }
         case "row_add": {
@@ -190,11 +200,22 @@ const handleMessage = (playerId : number, msg : Msg) => {
             todoListSessions[todoListId].todoList.description = description;
             return broadCastMessage(todoListId, msg);
         }
-        // case "delete_list": {
-        //     const listId = (msg as DeleteListMsg).listId;
-        //     todoListSessions[todoListId].todoList =  todoListSessions[todoListId].todoList.filter((list: TodoListType) => list.id !== listId);
-        //     return broadCastMessage(todoListId, msg);
-        // }
+        case "row_order": {
+            const swapA = (msg as ChangeOrderMsg).swapA;
+            const swapB = (msg as ChangeOrderMsg).swapB;
+            const rowLength = todoListSessions[todoListId].todoList.todoListRows.length;
+            if (swapA >= 0 && swapA < rowLength &&
+                swapB >= 0 && swapB < rowLength) {
+                const temp = todoListSessions[todoListId].todoList.todoListRows[swapA];
+                todoListSessions[todoListId].todoList.todoListRows[swapA] = todoListSessions[todoListId].todoList.todoListRows[swapB];
+                todoListSessions[todoListId].todoList.todoListRows[swapB] = temp;
+                console.log(todoListSessions[todoListId].todoList.todoListRows);
+                return broadCastMessageExcludePlayerId(todoListId, playerId, msg);
+            } else {
+                console.log("Out of bounds");
+                break;
+            }
+        }
     }
 }
 
@@ -202,8 +223,8 @@ export default handleNewClient;
 
 // Auto save every 60 seconds
 setInterval(() => {
-    const keys : string[] = Object.keys(todoListSessions);
+    const keys: string[] = Object.keys(todoListSessions);
     for (const key of keys) {
-      updateTodoList(key, todoListSessions[key].todoList);
+        updateTodoList(key, todoListSessions[key].todoList);
     }
 }, 60000);

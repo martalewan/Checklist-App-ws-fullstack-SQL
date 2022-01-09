@@ -2,6 +2,7 @@ import React from "react";
 import { TodoItemType } from '../../models/models';
 import iconOpen from '../../img/icon-open.svg';
 import iconExit from '../../img/icon-exit.svg';
+import iconDrag from '../../img/icon-drag.svg';
 
 interface TodoListItemProps {
   todo: TodoItemType;
@@ -15,14 +16,15 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo, updateChecklistRowCom
   return (
     <li className={todo.complete? "todo-row completed" : "todo-row"} >
       <div className="todo-item__label">
+        <img className="icon-drag" src={iconDrag} alt="" />
         <input
           type="checkbox"
           onChange={() => updateChecklistRowComplete(todo)}
-          checked={todo.complete}
+          checked={todo.complete ?? false}
           className="todo-checkbox"
           />
           <span className="todo-text"></span>
-          <input value={todo.text} type="text" className="todo-item-input" placeholder="New todo" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowText(todo.id, e)}/>
+          <input value={todo.text ?? ""} type="text" className="todo-item-input" placeholder="New todo" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowText(todo.id, e)}/>
       </div>
       <div className="todo-row__icons">
         <button className="icon-wrapper" onClick={(e: any) => onOpeningRow(todo, e)}>

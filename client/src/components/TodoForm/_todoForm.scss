@@ -1,41 +1,40 @@
 .todo-form {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 1rem;
-}
+  width: 100%;
 
-.todo-form__inputs {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
+  &__inputs {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    min-width: 10rem;
+  }
 
-.todo-form__todo-items {
-  flex-grow: 2;
-}
+  &__todo-items {
+    flex-grow: 2;
+  }
 
-.add-list__btn  {
-  margin-top: 1rem;
-}
-
-.todo-form__btn-wrapper {
+  &__btn-wrapper {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   padding-top: .7rem;
+  }
+}
+
+.add-list__btn {
+  margin-top: 1rem;
 }
 
 .add-todo__btn {
   background-color: var(--medium-grey);
-}
-
-.add-todo__btn:hover {
-  background-color: var(--medium-grey);
-  border: 1px solid var(--medium-grey);
-} 
-
-.todo-form {
-  width: 100%;
+  
+  &:hover {
+    background-color: var(--medium-grey);
+    border: 1px solid var(--medium-grey);
+  }
 }
 
 .todo-title,

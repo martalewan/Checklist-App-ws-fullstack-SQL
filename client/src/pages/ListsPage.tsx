@@ -4,7 +4,6 @@ import { TodoListType } from "../models/models";
 import { deleteTodoList, getAllTodoList } from "../services/Api";
 
 const ListsPage = () => {
-
   const [results, setResults] = useState<TodoListType[]>([]);
 
   useEffect(() => {
@@ -17,7 +16,8 @@ const ListsPage = () => {
 
   const deleteTodoListAction: any = (listId: string) => {
     deleteTodoList(listId).then(() => {
-      window.location.href = `http://localhost:3000/lists`;
+      const newRes = results.filter(result => result.id !== listId)
+      setResults(newRes)
     }).catch((err: any) => {
       console.error(err);
     })

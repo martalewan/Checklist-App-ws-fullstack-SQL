@@ -90,3 +90,9 @@ input[type="checkbox"]:checked {
   background-color: var(--light-grey);
   box-shadow: var(--box-shadow); 
 }
+
+.icon-drag {
+  opacity: 50%;
+  margin-right: 1px;
+  width: .22rem;
+}

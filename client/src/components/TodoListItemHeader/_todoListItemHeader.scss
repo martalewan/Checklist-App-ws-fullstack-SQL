@@ -1,92 +1,12 @@
-.todo-row {
-  list-style-type: none;
-  margin-bottom: 12px;
-  background: #ebf5fc;
-  box-shadow: -2px -2px 5px rgba(255, 255, 255, 1), 3px 3px 5px rgba(0, 0, 0, 0.1);
-  display: flex;
-}
 
-.completed {
-  text-decoration: line-through;
-}
-
-input[type="checkbox"] {
-  appearance: none;
-  margin-left: 0.3rem;
-  margin-right: 0.3rem;
-  width: 15px;
-  height: 15px;
-  background: none;
-  border-radius: 3px;
-  cursor: pointer;
-  box-shadow: inset -1px -1px 3px rgba(255, 255, 255, 1),
-  inset 1px 2px 3px rgba(0, 0, 0, 0.2);
-}
-
-input[type="checkbox"]:checked {
-  background-color: var(--medium-grey);
-  opacity: 65%;
-  box-shadow: -2px -2px 5px rgba(255, 255, 255, 1), 3px 3px 5px rgba(0, 0, 0, 0.1);
-}
-
-.todo-item__label {
-  display: flex;
-  align-items: center;
-  margin-left: 0.1rem;
-  padding: 7px 5px;
-  border-radius: 4px;
-  width: 100%;
-  display: flex;
-  cursor: pointer;
-  transition: all .3s ease;
- }
-
-.todo-item-input {
-  margin: 3px;
-  background: none;
-  outline: none;
-  border: none;
-  color: var(--dark-grey);
-  width: 90%;
-}
-
-.todo-item-input::placeholder {
-  color: var(--medium-grey);
-}
-
-.todo-row__icons {
-  display: flex;
-  align-items: center;
-}
-
-.img-icons {
-  cursor: pointer;
-}
-
-.icon-exit {
-  width: .6rem;
-}
-
-.icon-open {
-  width: .8rem;
-  height: .8rem;
-  float: left;
-}
-
-.icon-wrapper {
-  display: flex;
-  border-radius: 50%;
-  width: 1.3rem;
-  height: 1.3rem;
-  margin-right: .7rem;
-  justify-content: center;
-  align-items: center;
-  outline: none;
-  border: none;
-  background: none;
-}
-
-.icon-wrapper:hover {
-  background-color: var(--light-grey);
-  box-shadow: var(--box-shadow); 
+.header-text {
+  font-size: 10px;
+  color: var(--blue);
+  margin-right: .3rem;
+  white-space: nowrap;
+  padding: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 8px;
+  background-color: lightgray;
 }

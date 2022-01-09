@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import { Route, Routes } from "react-router-dom";
 import { createTodoList } from './services/Api';
 import Navigation from './components/Navigation/Navigation';
+import Footer from './components/Footer/Footer';
 import ListsPage from './pages/ListsPage';
 
 type CreateNewTodoList = (data: Object) => any;
@@ -29,6 +30,8 @@ const App = () => {
           <Route path="/lists" element={<ListsPage />} />
         </Routes>
       </div>
+      <Footer />
+
     </>
   );
 }

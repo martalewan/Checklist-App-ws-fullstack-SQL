@@ -26,7 +26,7 @@ const SubtodoList: React.FC<SubtodoListProps> = ({ editingTodo, updateChecklistR
         <article className='subtodo-wrapper__icons' >
           <RoundedButton handleSubmit={handleAddSubtodoItem} btnText={'add'} className='add-subtodo' />
         </article>
-        <div className="subtodo-items-list">
+        <article className="subtodo-wrapper__subtodo-items">
           {editingTodo.todoListRows?.map(subtodo => (
             <SubtodoListItem
               key={subtodo.id}
@@ -38,7 +38,7 @@ const SubtodoList: React.FC<SubtodoListProps> = ({ editingTodo, updateChecklistR
               onModify={(e) => onModifyRow(subtodo.id, e)}
             />
           ))}
-        </div>
+        </article>
       </section>
 
       <Modal
@@ -58,7 +58,7 @@ const SubtodoList: React.FC<SubtodoListProps> = ({ editingTodo, updateChecklistR
         : <></>}
       </Modal>
     </>
-  )
+  );
 };
 
 export default SubtodoList;

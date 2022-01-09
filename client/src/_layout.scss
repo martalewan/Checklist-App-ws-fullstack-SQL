@@ -44,6 +44,7 @@ body {
   flex-direction: column;
   align-items: center;
   margin-top: 3.5rem;
+  margin-bottom: 4rem;
 }
 
 .main__text-wrapper {
@@ -98,13 +99,21 @@ body {
 .main__app-description,
 .main__app-signature {
   font-size: 14px;
+  line-height: 19px;
 }
 
 .main__app-signature {
-  margin-top: 1.8rem;
+  margin-top: 1.9rem;
   text-align: right;
 }
 
 .main {
   width: 100%;
+}
+
+.card-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }

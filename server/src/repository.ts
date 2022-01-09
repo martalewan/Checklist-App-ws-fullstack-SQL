@@ -76,17 +76,13 @@ export const translateRowToTodoList = (row : any) : TodoListType => {
   }
 }
 
-export const deleteTodoListById = (token: any) : Promise<TodoListType> => {
+export const deleteTodoListById = (token: any) : Promise<void> => {
     return new Promise((resolve, reject) => {
         pool.query('DELETE FROM todoList WHERE todoList.id = ?', token, (error, results) => {
             if (error) {
                 return reject(error);
             }
-            if (results.length > 0) {
-                resolve;
-            } else {
-                reject("Not found");
-            }
+            resolve()
         });
     });
 }

@@ -43,7 +43,7 @@ app.get('/todo-lists/all', (req, res) => {
 
 app.delete('/todo-list/:id', (req : Request<{id: any}, any, any, any>, res) => {
   deleteTodoListById(req.params.id).then(() => {
-    res.end;
+    res.send({id: req.params.id});
   }).catch((err) => {
     res.send(err).status(400);
   })

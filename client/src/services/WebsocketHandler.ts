@@ -1,3 +1,5 @@
+import { log } from "console";
+
 interface Msg {
   command: string,
   data?: any,

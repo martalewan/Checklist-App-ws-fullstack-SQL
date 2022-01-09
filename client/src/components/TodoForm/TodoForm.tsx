@@ -8,47 +8,48 @@ import SubtodoList from '../SubtodoList/SubtodoList';
 import TodoItemHeader from '../TodoListItemHeader/TodoListItemHeader';
 
 const url = window.location.href;
-
 type UpdateChecklistRowComplete = (selectedTodo: TodoItemType) => void;
 
 interface Msg {
-  command: string,
-}
+  command: string;
+};
 interface UserJoinLeftMessage extends Msg {
-  data: { id: number }
-}
+  data: { id: number };
+};
 interface InitMsg extends Msg {
-  data: { todoList: TodoListType, users: any[] }
-}
+  data: { todoList: TodoListType, users: any[] };
+};
 interface UpdateRowMsg extends Msg {
   data: TodoItemType;
-}
+};
 interface DeleteRowMsg extends Msg {
   rowId: string;
-}
+};
 interface AddRowMsg extends Msg {
   data: TodoItemType;
-}
+};
 interface StringUpdateAttributeMsg extends Msg {
   data: string;
-}
+};
 interface AddRowMsg extends Msg {
   data: TodoItemType;
-}
+};
+interface ChangeOrderMsg extends Msg {
+  swapA: number;
+  swapB: number;
+};
 
 interface TodoFormProps {
   notify: () => React.ReactText;
-}
+};
 
 const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
 
   const params = useParams();
-
   const [todoList, setTodoList] = useState<TodoListType>({ id: '', title: '', description: '', todoListRows: [] });
   const [focusTodoItem, setFocusTodoItem] = useState<TodoItemType | undefined>(undefined);
   const [modifyingRow, setModifyingRow] = useState<string>('');
   const [users, setUsers] = useState<any>([]);
-
   const [connecting, setConnecting] = useState(false);
   const [id, setId] = useState("");
 
@@ -63,7 +64,6 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
 
   useEffect(() => {
     const checklistId = params.id;
-
     window.services.wsHandler.connect(checklistId, (msg: Msg) => {
       switch (msg.command) {
         case "init": {
@@ -86,7 +86,6 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
               return focusRow;
             }
           })
-
           break;
         }
         case "row_delete": {
@@ -98,8 +97,27 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
           })
           break;
         }
+        case "row_order": {
+          const swapA = (msg as ChangeOrderMsg).swapA;
+          const swapB = (msg as ChangeOrderMsg).swapB;
+          setTodoList(todoList => {
+            const rowLength = todoList.todoListRows.length;
+            if (swapA >= 0 && swapA < rowLength &&
+              swapB >= 0 && swapB < rowLength) {
+              const newRows = [...todoList.todoListRows];
+              const temp = newRows[swapA];
+              newRows[swapA] = newRows[swapB];
+              newRows[swapB] = temp;
+              return {
+                ...todoList,
+                todoListRows: newRows
+              };
+            }
+            return todoList;
+          })
+          break;
+        }
         case "row_add": {
-          console.log("ROW ADDED!");
           let newTodoItem = (msg as AddRowMsg).data;
 
           setTodoList(todoList => {
@@ -155,7 +173,6 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
     }, () => {
       setConnecting(false);
     });
-
     return () => {
       window.services.wsHandler.disconnect()
     }
@@ -169,8 +186,8 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
     window.services.wsHandler.send({ command: "row_add", data: newTodoItem });
     setTodoList(todoList => {
       return { ...todoList, newTodoItem }
-    })
-  }
+    });
+  };
 
   const updateChecklistRowText = (id: string | undefined, e: React.ChangeEvent<HTMLInputElement>) => {
     const newRows = [...todoList.todoListRows];
@@ -180,8 +197,8 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
       window.services.wsHandler.send({ command: "row_update", data: newRows[index] });
       todoList.todoListRows = newRows;
       setTodoList({ ...todoList })
-    }
-  }
+    };
+  };
 
   const updateChecklistRowComplete: UpdateChecklistRowComplete = (selectedTodo: TodoItemType) => {
     const newRows = [...todoList.todoListRows];
@@ -191,20 +208,20 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
       window.services.wsHandler.send({ command: "row_update", data: newRows[index] });
       todoList.todoListRows = newRows;
       setTodoList({ ...todoList })
-    }
+    };
   };
 
   const handleUpdateTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     window.services.wsHandler.send({ command: "title_update", data: e.target.value });
     todoList.title = e.target.value;
     setTodoList({ ...todoList });
-  }
+  };
 
   const handleUpdateDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     window.services.wsHandler.send({ command: "description_update", data: e.target.value });
     todoList.description = e.target.value;
     setTodoList({ ...todoList });
-  }
+  };
 
   const onRemoveRow = (id: string | undefined, e: any) => {
     e.preventDefault();
@@ -212,33 +229,33 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
     let filteredRows = todoList.todoListRows.filter(row => row.id !== id);
     if (filteredRows.length === 0) {
       filteredRows.push({ id: uuid.v4(), text: "", complete: false, todoListRows: [] });
-    }
+    };
     todoList.todoListRows = filteredRows;
-    setTodoList({ ...todoList })
-  }
+    setTodoList({ ...todoList });
+  };
 
   const onOpeningRow = (todo: TodoItemType, e: any) => {
     e.preventDefault();
-    setFocusTodoItem(todo)
-  }
+    setFocusTodoItem(todo);
+  };
 
   const onModifyRow = (id: string, e: any) => {
     e.preventDefault();
     if (focusTodoItem === undefined) {
       return;
-    }
+    };
     setModifyingRow(id);
-  }
+  };
 
   const onClosingRow = (e: any) => {
     e.preventDefault();
-    setFocusTodoItem(undefined)
-  }
+    setFocusTodoItem(undefined);
+  };
 
   const handleAddSubtodoItem = (e: any) => {
     if (focusTodoItem === undefined) {
       return null;
-    }
+    };
 
     e.preventDefault();
     const id = uuid.v4();
@@ -246,17 +263,17 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
 
     if (focusTodoItem.todoListRows === undefined) {
       focusTodoItem.todoListRows = [];
-    }
+    };
     focusTodoItem.todoListRows.push(newTodoItem);
 
     window.services.wsHandler.send({ command: "row_update", data: focusTodoItem } as UpdateRowMsg);
     setFocusTodoItem({ ...focusTodoItem });
-  }
+  };
 
   const updateChecklistSubtaskRowComplete = (selectedTodo: TodoItemType) => {
     if (focusTodoItem === undefined) {
       return null;
-    }
+    };
     const newRows = [...todoList.todoListRows];
     const index = newRows.findIndex(row => row.id === focusTodoItem.id);
     if (index >= 0) {
@@ -267,8 +284,8 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
         window.services.wsHandler.send({ command: "row_update", data: newRows[index] });
         todoList.todoListRows = newRows;
         setTodoList({ ...todoList })
-      }
-    }
+      };
+    };
   };
 
   const updateChecklistRowValue = (selectedTodo: TodoItemType, e: any, type: string) => {
@@ -282,12 +299,13 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
       const subTaskIndex = subTasks.findIndex(row => row.id === selectedTodo.id);
       if (subTaskIndex >= 0) {
         if (type === 'price') {
-          if (!isNaN(parseFloat(e.target.value))) {
-            newRows[index].todoListRows[subTaskIndex].price = parseFloat(e.target.value);
+          const newPriceStr : string = e.target.value;
+          const newPrice : number = parseFloat(newPriceStr);
+          if (!isNaN(newPrice)) {
+            newRows[index].todoListRows[subTaskIndex].price = newPrice;
           }
           else {
             newRows[index].todoListRows[subTaskIndex].price = undefined;
-            e.target.value = '';
           }
         } else if (type === 'time') {
           if (!isNaN(parseFloat(e.target.value))) {
@@ -295,7 +313,6 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
           }
           else {
             newRows[index].todoListRows[subTaskIndex].time = undefined;
-            e.target.value = '';
           }
         } else {
           newRows[index].todoListRows[subTaskIndex].notes = e.target.value;
@@ -305,13 +322,13 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
         setTodoList({ ...todoList })
       }
     }
-  }
+  };
 
   const deleteChecklistSubtaskRow = (id: string, e: any) => {
     e.preventDefault();
     if (focusTodoItem === undefined) {
       return null;
-    }
+    };
     const newRows = [...todoList.todoListRows];
     const index = newRows.findIndex(row => row.id === focusTodoItem.id);
     if (index >= 0) {
@@ -325,7 +342,8 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
         setTodoList({ ...todoList })
       }
     }
-  }
+  };
+  
   const updateChecklistSubtaskRowText = (id: string, e: any) => {
     if (focusTodoItem === undefined) {
       return null;
@@ -339,23 +357,35 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
         newRows[index].todoListRows[subTaskIndex].text = e.target.value;
         window.services.wsHandler.send({ command: "row_update", data: newRows[index] });
         todoList.todoListRows = newRows;
-        setTodoList({ ...todoList })
+        setTodoList({ ...todoList });
       }
     }
-  }
+  };
 
   const copyUrl = (e: any) => {
     e.preventDefault();
     navigator.clipboard.writeText(url);
     notify();
-  }
+  };
+
+  const onOrderChange = (fromIx: any, toIx: any) => {
+    const newRows = [...todoList.todoListRows];
+    const temp = newRows[fromIx];
+    newRows[fromIx] = newRows[toIx];
+    newRows[toIx] = temp;
+    todoList.todoListRows = newRows;
+    setTodoList({...todoList});
+
+    window.services.wsHandler.send({ command: "row_order", swapA: fromIx, swapB: toIx });
+}
+
 
   return (
     <section className='main'>
       <form className="todo-form" action="">
         <div className="todo-form__inputs">
-          <input className="todo-title" value={todoList.title} onChange={handleUpdateTitle} placeholder="List title" maxLength={46} required />
-          <textarea className="todo-description" maxLength={300} value={todoList.description} cols={5} rows={7} onChange={handleUpdateDescription} placeholder="List description" />
+          <input className="todo-title" value={todoList.title ?? ""} onChange={handleUpdateTitle} placeholder="List title" maxLength={46} required />
+          <textarea className="todo-description" maxLength={300} value={todoList.description ?? ""} cols={5} rows={7} onChange={handleUpdateDescription} placeholder="List description" />
         </div>
         <div className="todo-form__todo-items">
           {focusTodoItem === undefined
@@ -367,6 +397,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
                   updateChecklistRowText={updateChecklistRowText}
                   onRemoveRow={onRemoveRow}
                   onOpeningRow={onOpeningRow}
+                  onRowSwap={onOrderChange}
                 />
                 <article className="todo-form__btn-wrapper">
                   <Button handleSubmit={handleAddTodoItem} btnText={'Add todo'} className='add-todo' />

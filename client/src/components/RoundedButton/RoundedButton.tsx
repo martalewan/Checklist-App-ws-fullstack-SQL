@@ -15,16 +15,16 @@ const RoundedButton: React.FC<RoundedButtonProps> = ({ handleSubmit, btnText, cl
       return iconModify;
     } else if (btnText === 'add') {
       return iconAdd;
-    } else {return iconDelete; }
+    } else {
+      return iconDelete;
+    }
   }
 
   return (
-    <>
-      <button className={`rounded-btn ${className}__btn`} onClick={handleSubmit}>
-        <img className="img-icons icon-open" src={displayIcon(btnText)} alt="" />    
-      </button>
-    </>
+    <button className={`rounded-btn ${className}__btn`} onClick={handleSubmit}>
+      <img className="img-icons icon-open" src={displayIcon(btnText)} alt="" />
+    </button>
   );
-}
+};
 
 export default RoundedButton;
