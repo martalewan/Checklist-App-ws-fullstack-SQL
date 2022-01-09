@@ -1,19 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import TodoListItem from '../TodoListItem/TodoListItem';
 import { TodoItemType, TodoListType } from '../../models/models';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const grid = 8;
-
 const getItemStyle = (isDragging: any, draggableStyle: any) => ({
-  // some basic styles to make the items look a bit nicer
   userSelect: "none",
   padding: 0,
   margin: 0,
-
-  // change background colour if dragging
-
-  // styles we need to apply on draggables
   ...draggableStyle
 });
 
@@ -29,9 +22,11 @@ interface TodoListProps {
   onRemoveRow: (id: string | undefined, e: any) => void;
   onOpeningRow: (todo: TodoItemType, e: any) => void;
   onRowSwap: (fromIx: any, toIx: any) => void;
+  getTotalPrice: (todo: TodoItemType) => any;
+  getTotalTime: (todo: TodoItemType) => any;
 }
 
-const TodoList: React.FC<TodoListProps> = ({ todoList, updateChecklistRowComplete, updateChecklistRowText, onRemoveRow, onOpeningRow, onRowSwap }) => {
+const TodoList: React.FC<TodoListProps> = ({ todoList, updateChecklistRowComplete, updateChecklistRowText, onRemoveRow, onOpeningRow, onRowSwap, getTotalPrice, getTotalTime }) => {
 
   const onDragEnd = (result: any) => {
     if (!result.destination) {
@@ -72,6 +67,8 @@ const TodoList: React.FC<TodoListProps> = ({ todoList, updateChecklistRowComplet
                         updateChecklistRowText={updateChecklistRowText}
                         onRemoveRow={onRemoveRow}
                         onOpeningRow={onOpeningRow}
+                        getTotalPrice={getTotalPrice}
+                        getTotalTime={getTotalTime}
                       />
                     </div>
                   )}

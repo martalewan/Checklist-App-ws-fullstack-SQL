@@ -2,6 +2,8 @@ import React from "react";
 import { TodoItemType } from '../../models/models';
 import iconModify from '../../img/icon-modify.svg';
 import iconExit from '../../img/icon-exit.svg';
+import { customCurrency } from '../../services/MoneyUtility';
+import { formatHours } from '../../services/TimeUtility';
 
 interface SubtodoListItemProps {
   todo: TodoItemType;
@@ -22,9 +24,9 @@ const SubtodoListItem: React.FC<SubtodoListItemProps> = ({ todo, updateChecklist
           checked={todo.complete}
           className="todo-checkbox"
         />
-        <input value={todo.text} type="text" className="todo-item-input" placeholder="New todo" onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowText(todo.id, e)} />
-        <span className="header-text">{todo.price}$</span>
-        <span className="header-text">{todo.time}h</span>
+        <input value={todo.text} type="text" className="todo-item-input" placeholder="New todo" maxLength={48} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateChecklistRowText(todo.id, e)} />
+        <span className="labels">{customCurrency(todo.price).format()}</span>
+        <span className="labels">{todo.time ? formatHours(todo.time) : '0h'}</span>
       </div>
       <div className="todo-row__icons">
         <button className="icon-wrapper" onClick={onModify}>

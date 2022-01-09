@@ -18,7 +18,7 @@ const Card: React.FC<CardProps> = ({ todo, deleteTodoList }) => {
   return (
     <div className="card">
       <div className="card__text-wrapper" >
-        <p className="card-text">{todo.title ?? 'No title'}</p>
+        <p className="card-text card-title">{todo.title ?? 'No title'}</p>
         <p className="card-text">{todo.description ?? 'No description'}</p>
         <p className="card-text">Number of task: {todo.todoListRows.length}</p>
       </div>

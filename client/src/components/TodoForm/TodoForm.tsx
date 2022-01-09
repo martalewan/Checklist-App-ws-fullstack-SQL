@@ -8,13 +8,11 @@ import SubtodoList from '../SubtodoList/SubtodoList';
 import TodoItemHeader from '../TodoListItemHeader/TodoListItemHeader';
 
 const url = window.location.href;
+
 type UpdateChecklistRowComplete = (selectedTodo: TodoItemType) => void;
 
 interface Msg {
   command: string;
-};
-interface UserJoinLeftMessage extends Msg {
-  data: { id: number };
 };
 interface InitMsg extends Msg {
   data: { todoList: TodoListType, users: any[] };
@@ -49,19 +47,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
   const [todoList, setTodoList] = useState<TodoListType>({ id: '', title: '', description: '', todoListRows: [] });
   const [focusTodoItem, setFocusTodoItem] = useState<TodoItemType | undefined>(undefined);
   const [modifyingRow, setModifyingRow] = useState<string>('');
-  const [users, setUsers] = useState<any>([]);
-  const [connecting, setConnecting] = useState(false);
-  const [id, setId] = useState("");
-
-  useEffect(() => {
-    setId(id => {
-      if (id !== "" && params.id !== id) {
-        window.location.reload();
-      }
-      return params.id || id
-    });
-  }, [params, setId]);
-
+  
   useEffect(() => {
     const checklistId = params.id;
     window.services.wsHandler.connect(checklistId, (msg: Msg) => {
@@ -69,7 +55,6 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
         case "init": {
           const message = (msg as InitMsg);
           setTodoList(message.data.todoList)
-          setUsers(message.data.users);
           break;
         }
         case "row_update": {
@@ -144,20 +129,6 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
           })
           break;
         }
-        case "user_joined": {
-          let userJoin = (msg as UserJoinLeftMessage).data;
-          setUsers((users: any) => {
-            return [...users, userJoin]
-          })
-          break;
-        }
-        case "user_left": {
-          setUsers((users: any) => {
-            let userLeft = (msg as UserJoinLeftMessage).data;
-            return users.filter((user: any) => user.id !== userLeft.id);
-          })
-          break;
-        }
         default:
           console.error(`Cannot process command ${msg.command}`);
       }
@@ -165,18 +136,15 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
       if (cleanDisconnect) {
         return;
       }
-      setConnecting(true);
       setTimeout(() => {
         reconnect();
         console.log("Reconnecting...");
       }, 2500);
-    }, () => {
-      setConnecting(false);
     });
     return () => {
       window.services.wsHandler.disconnect()
     }
-  }, [setTodoList, setConnecting, setFocusTodoItem]);
+  }, [setTodoList, setFocusTodoItem]);
 
 
   const handleAddTodoItem = (e: any) => {
@@ -368,7 +336,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
     notify();
   };
 
-  const onOrderChange = (fromIx: any, toIx: any) => {
+  const onOrderChange = (fromIx: number, toIx: number) => {
     const newRows = [...todoList.todoListRows];
     const temp = newRows[fromIx];
     newRows[fromIx] = newRows[toIx];
@@ -378,6 +346,29 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
 
     window.services.wsHandler.send({ command: "row_order", swapA: fromIx, swapB: toIx });
 }
+
+const getTotalPrice = (todo: TodoItemType) => {
+  let totalPrice = 0;
+  if (todo.todoListRows !== undefined) {
+    todo.todoListRows.map(subTodo => {
+      if (subTodo.price !== undefined) {
+        totalPrice = totalPrice + subTodo.price
+      } return totalPrice;
+    })
+    return totalPrice;
+  }
+};
+const getTotalTime = (todo: TodoItemType) => {
+  let totalTime = 0;
+  if (todo.todoListRows !== undefined) {
+    todo.todoListRows.map(subTodo => {
+      if (subTodo.time !== undefined) {
+        totalTime = totalTime + subTodo.time
+      } return totalTime;
+    })
+  }
+  return totalTime;
+};
 
 
   return (
@@ -398,6 +389,8 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
                   onRemoveRow={onRemoveRow}
                   onOpeningRow={onOpeningRow}
                   onRowSwap={onOrderChange}
+                  getTotalPrice={getTotalPrice}
+                  getTotalTime={getTotalTime}
                 />
                 <article className="todo-form__btn-wrapper">
                   <Button handleSubmit={handleAddTodoItem} btnText={'Add todo'} className='add-todo' />
@@ -411,6 +404,8 @@ const TodoForm: React.FC<TodoFormProps> = ({ notify }) => {
                   todo={focusTodoItem}
                   updateChecklistRowText={updateChecklistRowText}
                   onClosingRow={onClosingRow}
+                  getTotalPrice={getTotalPrice}
+                  getTotalTime={getTotalTime}
                 />
                 <SubtodoList
                   deleteChecklistSubtaskRow={deleteChecklistSubtaskRow}

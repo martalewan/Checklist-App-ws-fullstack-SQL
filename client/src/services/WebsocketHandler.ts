@@ -1,10 +1,7 @@
-import { log } from "console";
-
 interface Msg {
   command: string,
   data?: any,
   id?: number | string,
-  
 }
 
 export class WebsocketHandler {

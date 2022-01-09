@@ -28,15 +28,6 @@
   margin-top: 1rem;
 }
 
-.add-todo__btn {
-  background-color: var(--medium-grey);
-  
-  &:hover {
-    background-color: var(--medium-grey);
-    border: 1px solid var(--medium-grey);
-  }
-}
-
 .todo-title,
 .todo-description {
   margin-bottom: .8rem;
