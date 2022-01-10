@@ -1,6 +1,6 @@
 # Checklist-App-ws-fullstack-SQL
 
-# elcome to my UI Full-Stack App 'Reminders App' 
+# Welcome to my UI Full-Stack App 'Reminders App' 
 
 Welcome to Checklist App which is deployed using Cloudflare for the frontend and Heroku for the backend. The client side is built with React and Typescript and the server is built with Express, Typescript, SQL and WS.
 
