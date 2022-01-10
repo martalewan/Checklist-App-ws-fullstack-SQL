@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import './main.scss';
 import { WebsocketHandler } from './services/WebsocketHandler';
 
-
 declare global {
   interface Window { services: any; }
 }

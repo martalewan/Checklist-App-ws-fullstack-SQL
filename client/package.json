@@ -12,6 +12,7 @@
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.11",
     "@types/react-notify-toast": "^0.5.3",
+    "@types/react-router": "^5.1.17",
     "currency.js": "^2.0.4",
     "node-sass": "^7.0.1",
     "react": "^17.0.2",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@types/react-modal": "^3.13.1",
+    "@types/react-router-dom": "^5.3.2",
     "@types/uuid": "^8.3.3",
     "eslint": "^8.0.0",
     "eslint-config-react-app": "^7.0.0",
