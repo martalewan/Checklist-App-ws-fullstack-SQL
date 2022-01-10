@@ -4,19 +4,6 @@
 
 Welcome to Checklist App which is deployed using Cloudflare for the frontend and Heroku for the backend. The client side is built with React and Typescript and the server is built with Express, Typescript, SQL and WS.
 
-## Available Scripts
-
-In the project directory - server and client, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-
 ## About the project - stories
 
 The features are:
