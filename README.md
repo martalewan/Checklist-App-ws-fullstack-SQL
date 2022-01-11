@@ -21,3 +21,4 @@ expenses / time / information.
 
 I decided to use relatively new design trend and a term that’s gotten a good amount of buzz lately -Neumorphism (aka neomorphism). I followed soft and minimal design.
 
+https://checklist-app-ws-fullstack-sql.pages.dev/
